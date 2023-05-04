@@ -24,8 +24,7 @@ public class BonusWorkFlowSoundness {
     static Scanner scan = new Scanner(System.in);
     
     public static void main(String[] args) {
-
-        System.out.println("Build a workflow manually or use pre-defined lecture examples? 0 for pre-defined 1 for manual.");
+        System.out.print("Build a workflow manually or use pre-defined lecture examples? 0 for pre-defined 1 for manual:");
         int manual = Integer.parseInt(scan.nextLine());
         
         if(manual==0){
@@ -48,24 +47,22 @@ public class BonusWorkFlowSoundness {
     }
     
     public static void userInput(){
-        int next = 1;
+        int next = 0;
         String s;
         
-        while(next==1){
-            System.out.print("Please input a place name in order of it's marking list: ");
+        while(next!=-1){
+            System.out.print("Please input a place name in order of it's marking list, type -1 to stop: ");
             s = scan.nextLine();
-            p.add(new Place(s));
-            System.out.print("Input Anotet? 1 for yes, 0 for no: ");
-            next = Integer.parseInt(scan.nextLine());
+            next = tryParseInt(s,0);
+            if(next ==0){p.add(new Place(s));}
         }
-        next =1;
+        next =0;
         
-        while(next==1){
-            System.out.print("Please input a Transitions name: ");
+        while(next!=-1){
+            System.out.print("Please input a Transitions name, type -1 to stop: ");
             s = scan.nextLine();
-            t.add(new Transition(s));
-            System.out.print("Input Anotet? 1 for yes, 0 for no: ");
-            next = Integer.parseInt(scan.nextLine());
+            next = tryParseInt(s,0);
+            if(next ==0){t.add(new Transition(s));}
         }
         
         next = 1;
@@ -77,26 +74,32 @@ public class BonusWorkFlowSoundness {
             System.out.print("Please input a flow's transition name: ");
             s = scan.nextLine();
             Transition tTemp = new Transition(s);
-            System.out.print("Please input a flow's direction 0 for place to transition, 1 for transition to place: ");
-            int direction = Integer.parseInt(scan.nextLine());
+            System.out.println("Please input a flow's direction.");
+            System.out.print("type pt for place to transition, tp for transition to place: ");
+            String direction = scan.nextLine();
             
             switch (direction) {
-                case 0:
+                case "pt":
                     f.add(new Flow(pTemp,tTemp,pt));
                     break;
-                case 1:
+                case "tp":
                     f.add(new Flow(pTemp,tTemp,tp));
                     break;
                 default:
                     System.out.print("Error, non-valid direction, please re-input this flow.");
                     break;
             }
-            System.out.print("Input Anotet? 1 for yes, 0 for no: ");
+            System.out.print("Input Another? 1 for yes, 0 for no: ");
             next = Integer.parseInt(scan.nextLine());
         }
         
+        System.out.println("Please input the marking in the same order as the Places:");
+        System.out.println("Ex: (1,0,0,0) presents (i,p1,p2,o)");
         for(int i=0;i<p.size();i++){
-            if(i==0){state.add(1);}else{state.add(0);}
+            System.out.print("Please enter Node " + p.get(i).place + " value 1 or 0: ");
+            next = Integer.parseInt(scan.nextLine());
+            state.add(next);
+            //if(i==0){state.add(1);}else{state.add(0);}
         }
     }
     
@@ -167,6 +170,14 @@ public class BonusWorkFlowSoundness {
 //            }
 //            System.out.print("),");
 //        }
+    }
+    
+    public static int tryParseInt(String value, int defaultVal) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultVal;
+        }
     }
 }
 
